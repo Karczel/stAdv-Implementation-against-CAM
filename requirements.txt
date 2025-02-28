@@ -1,8 +1,9 @@
 opencv-python~=4.11.0.86
-numpy~=2.0.2
-torch~=2.6.0
-torchvision~=0.21.0
-tensorflow~=2.18.0
+numpy~=1.18.5
+torch~=1.13.1
+torchvision~=0.14.1
+tensorflow~=1.15.5
 stadv~=0.2.1
-matplotlib~=3.10.1
+matplotlib~=3.5.3
 idx2numpy~=1.2.3
+keras~=2.3.1
