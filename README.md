@@ -10,3 +10,23 @@ conda update navigator-updater
 ```commandline
 pip install opencv-python
 ```
+
+Tensorflow latest stable release only support python 3.7 - 3.11
+Downgrade python
+
+Uninstall current python
+Windows
+```commandline
+winget uninstall Python
+```
+
+installl Python 3.11
+```commandline
+winget install --id Python.Python.3.11 -e
+```
+Restart your computer
+
+try check version
+```commandline
+python --version  
+```
