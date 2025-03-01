@@ -113,6 +113,9 @@ image_after = test_image_perturbed[0, :, :, 0]
 difference = image_after - image_before
 max_diff = abs(difference).max()
 
+# CAM result
+
+
 plt.rcParams['figure.figsize'] = [10, 10]
 
 f, (ax1, ax2, ax3) = plt.subplots(1, 3)
