@@ -11,9 +11,8 @@ import stadv
 import matplotlib.pyplot as plt
 
 from load_datasets import *
-from tensorflow.keras.models import load_model
 
-from test_simple_MNIST_model import test_mnist
+x_train, y_train, x_test, y_test = load_mnist()
 
 # definition of the inputs to the network
 images = tf.compat.v1.placeholder(tf.float32, shape=[None, 28, 28, 1], name='images')
@@ -58,9 +57,7 @@ saver = tf.train.Saver()
 
 sess = tf.Session()
 sess.run(init)
-# saver.restore(sess, os.path.join('saved_models', 'simple_mnist.h5'))
-
-test_mnist(x_test, y_test)
+saver.restore(sess, os.path.join('saved_models', 'simple_mnist'))
 
 mnist_images = x_test
 mnist_labels = y_test
