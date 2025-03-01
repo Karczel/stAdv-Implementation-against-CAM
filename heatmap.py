@@ -5,9 +5,6 @@ import torchvision.transforms as transforms
 from torchvision.models import resnet50
 import torch.nn.functional as F
 
-# โหลดโมเดล ResNet50 ที่ผ่านการฝึกบน ImageNet
-model = resnet50(pretrained=True)
-model.eval()
 
 # คลาสสำหรับ Grad-CAM
 class GradCAM:
@@ -51,8 +48,6 @@ class GradCAM:
 
         return cam.squeeze().cpu().detach().numpy()
 
-# เลือก Layer ที่ต้องการใช้ Grad-CAM
-grad_cam = GradCAM(model, model.layer4[-1])
 
 # แปลงภาพเป็น Tensor
 def preprocess_image(img):
@@ -64,35 +59,43 @@ def preprocess_image(img):
     ])
     return transform(img).unsqueeze(0)
 
-# เปิดเว็บแคม
-cap = cv2.VideoCapture(0)
 
-while True:
-    ret, frame = cap.read()
-    if not ret:
-        break
+if __name__ == "__main__":
+    # Your main execution code here
+    # โหลดโมเดล ResNet50 ที่ผ่านการฝึกบน ImageNet
+    model = resnet50(pretrained=True)
+    model.eval()
+    # เลือก Layer ที่ต้องการใช้ Grad-CAM
+    grad_cam = GradCAM(model, model.layer4[-1])
+    # เปิดเว็บแคม
+    cap = cv2.VideoCapture(0)
 
-    # แปลงสีเป็น RGB และปรับขนาดให้เข้ากับโมเดล
-    img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    input_tensor = preprocess_image(img_rgb)
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
 
-    # สร้าง Attention Heatmap
-    heatmap = grad_cam.generate_heatmap(input_tensor)
+        # แปลงสีเป็น RGB และปรับขนาดให้เข้ากับโมเดล
+        img_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        input_tensor = preprocess_image(img_rgb)
 
-    # แปลง heatmap เป็นภาพ
-    heatmap = cv2.resize(heatmap, (frame.shape[1], frame.shape[0]))
-    heatmap = np.uint8(255 * heatmap)
-    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+        # สร้าง Attention Heatmap
+        heatmap = grad_cam.generate_heatmap(input_tensor)
 
-    # รวมภาพต้นฉบับกับ heatmap
-    output = cv2.hconcat([frame, heatmap])
+        # แปลง heatmap เป็นภาพ
+        heatmap = cv2.resize(heatmap, (frame.shape[1], frame.shape[0]))
+        heatmap = np.uint8(255 * heatmap)
+        heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
 
-    # แสดงผล
-    cv2.imshow("Webcam with Attention Heatmap", output)
+        # รวมภาพต้นฉบับกับ heatmap
+        output = cv2.hconcat([frame, heatmap])
 
-    # กด 'q' เพื่อออกจาก loop
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        # แสดงผล
+        cv2.imshow("Webcam with Attention Heatmap", output)
 
-cap.release()
-cv2.destroyAllWindows()
+        # กด 'q' เพื่อออกจาก loop
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
