@@ -11,7 +11,7 @@ conda update navigator-updater
 pip install opencv-python
 ```
 
-srAdvb Tensorflow only support python 3.7
+stAdv Tensorflow only support python 3.7
 Downgrade python
 
 reconfigure your python interpreter
