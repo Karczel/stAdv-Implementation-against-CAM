@@ -117,9 +117,34 @@ image_after = test_image_perturbed[0, :, :, 0]
 difference = image_after - image_before
 max_diff = abs(difference).max()
 
+
+def CAM_overlay_static_result(image):
+    model = resnet50(pretrained=True)
+    model.eval()
+    grad_cam = GradCAM(model, model.layer4[-1])
+    # แปลงสีเป็น RGB และปรับขนาดให้เข้ากับโมเดล
+    img_rgb = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    img_rgb = np.uint8(img_rgb)
+    input_tensor = preprocess_image(img_rgb)
+    # สร้าง Attention Heatmap
+    heatmap = grad_cam.generate_heatmap(input_tensor)
+    # แปลง heatmap เป็นภาพ
+    heatmap = cv2.resize(heatmap, (image.shape[1], image.shape[0]))
+    heatmap = np.uint8(255 * heatmap)
+    heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
+    # Convert heatmap to RGB for Matplotlib
+    heatmap_rgb = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+    # Overlay the heatmap on the original image
+    overlay = cv2.addWeighted(img_rgb, 0.6, heatmap_rgb, 0.4, 0)
+    return overlay
+
+# CAM result
+overlay_clean = CAM_overlay_static_result(image_before)
+overlay_perturbed = CAM_overlay_static_result(image_after)
+
 plt.rcParams['figure.figsize'] = [10, 10]
 
-f, (ax1, ax2, ax3) = plt.subplots(1, 3)
+f, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(2, 3)
 
 ax1.imshow(image_before)
 ax1.set_title("True: {} - Pred: {} - Target: {}".format(test_label[0], pred_label, random_target[0]))
@@ -130,4 +155,12 @@ ax2.axis('off')
 ax3.imshow(difference)
 ax3.set_title("Max Difference: {}".format(round(max_diff, 2)))
 ax3.axis('off')
+ax4.imshow(overlay_clean)
+ax4.set_title("CAM Heatmap clean")
+ax4.axis('off')
+ax5.imshow(overlay_perturbed)
+ax5.set_title("CAM Heatmap Perturbed")
+ax5.axis('off')
+f.delaxes(ax6)
+
 plt.show()

@@ -18,3 +18,9 @@ stAdv Tensorflow only support python 3.7
 Downgrade python
 
 reconfigure your python interpreter
+
+in maxvit.py
+```python
+from typing import Any, Callable, List, Optional, Sequence, Tuple
+from collections import OrderedDict
+```

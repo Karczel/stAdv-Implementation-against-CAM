@@ -3,6 +3,8 @@ import tensorflow as tf
 from tensorflow.keras.utils import to_categorical
 from load_datasets import *  # Assuming you have a separate file to load the dataset
 
+# !THIS DIDN'T WORK, USE THE MNIST FILES IN preset_models!
+
 # Load MNIST data
 x_train, y_train, x_test, y_test = load_mnist()
 
