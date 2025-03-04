@@ -1,0 +1,12 @@
+opencv-python~=4.11.0.86
+numpy<1.19.0,>=1.16.0
+torch~=1.13.1
+torchvision~=0.14.1
+tensorflow~=1.15.5
+tensorflow-estimator==1.15.1
+tensorboard<1.16.0,>=1.15.0
+stadv~=0.2.1
+matplotlib~=3.5.3
+idx2numpy~=1.2.3
+keras~=2.3.1
+Pillow~=9.5.0
